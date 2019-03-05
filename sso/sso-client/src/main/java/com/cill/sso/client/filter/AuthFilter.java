@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.*;
@@ -14,12 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Component
 @WebFilter(filterName = "AuthFilter", urlPatterns = "/*")
 public class AuthFilter implements Filter {
     private Logger log = LoggerFactory.getLogger(AuthFilter.class);
-    @Autowired
-    private ObjectMapper objectMapper;
+
     public void destroy() {
     }
 
@@ -28,12 +24,14 @@ public class AuthFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse)resp;
 
         log.info("Into AuthFilter!");
+
         if(request.getSession().getAttribute("username")==null){
             log.info("ticket:"+request.getParameter("ticket"));
             if(request.getParameter("ticket")!=null){
                 String ticket = request.getParameter("ticket");
                 RestTemplate restTemplate = new RestTemplate();
                 String result = restTemplate.postForObject("http://www.sso.com:8080/sso/checkToken",ticket, String.class);
+                ObjectMapper objectMapper = new ObjectMapper();
                 JsonNode readTree = objectMapper.readTree(result);
                 JsonNode validNode = readTree.get("valid");
                 if(validNode!=null && validNode.asBoolean()){
