@@ -1,4 +1,4 @@
-package com.cill.sso.server;
+package com.cill.sso;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

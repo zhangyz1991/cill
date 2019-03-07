@@ -1,4 +1,4 @@
-package com.cill.sso.server;
+package com.cill.sso;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
